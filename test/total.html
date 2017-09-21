@@ -1,0 +1,508 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title>文章管理平台</title>
+    <link rel="stylesheet" href="../themes/default.css"/>
+    <link rel="stylesheet" href="./index.css"/>
+    <script src="./bmob-min.js"></script>
+    <script src="../jquery.min.js"></script>
+</head>
+<body>
+    <!--最大-->
+    <div class="box">
+        <!--上-->
+        <div class="top">
+            <div class="top-cont">
+                <div class="top-l">小程序素材管理平台</div>
+                <div class="top-r">
+                    <!--<div><span>登录</span>-->
+                        <!--<span>注册</span>-->
+                    <!--</div>-->
+                    <div>
+                        <span> <a href="javascript:;">登录</a></span>
+                        <span><a href="javascript:;">注册 </a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--中-->
+        <div class="content">
+            <div class="content-box">
+                   <!--上 -->
+                <div class="content-t" >
+                    新建图文
+                </div>
+                <!--左-->
+                <div class="content-l">
+                    <div class="content-l-txt" >图文列表</div>
+                    <div class="content-l-img">
+                        <img class="timgs1" src="" alt=""/>
+                        <span class="sp1">标题</span>
+                    </div>
+                    <div class="content-l-img2">
+                        <span class="sp2">标题标题标题标题标题</span>
+                        <img class="timgs2"  src="" alt=""/>
+                    </div>
+                    <div class="content-l-img3">
+                        <span class="sp3">标题</span>
+                        <img class="timgs3" src="" alt=""/>
+                    </div>
+                </div>
+                <!--中-->
+                <div class="content-c">
+                    <form style="overflow: hidden">
+                        <textarea   cols="100" rows="20" style="width:800px;height:200px;" id="fn"></textarea>
+                        <br />
+                        <!--<input type="button" id="create1" value="提交" />-->
+                        <script src="../kindeditor-all.js"></script>
+                        <script>
+                            KindEditor.ready(function(K) {
+                                window.editor = K.create('textarea', {
+                                    allowFileManager : true,
+                                    langType : 'zh-CN',
+                                    autoHeightMode : true
+                                });
+                                //点击新建表
+                                K('.content-t').click(function(e) {
+                                    console.log("下一步 img")
+                                    editor.html("")
+                                    var textid;
+                                    var con1id;
+                                    var con2id;
+                                    var con3id;
+                                    var b = true;
+                                    //  创建text表1
+                                    K('.content-l-img').click(function (e) {
+                                        $('.box-m1').css("display","block")
+                                        $('.box-m2').css("display","none")
+                                        $('.box-m3').css("display","none")
+
+                                        $('.add1').css("display","block")
+                                        $('.add2').css("display","none")
+                                        $('.add3').css("display","none")
+
+                                        $('.upt1s').css("display","block")
+                                        $('.upt2s').css("display","none")
+                                        $('.upt3s').css("display","none")
+
+
+                                        if (b) {
+                                            b = false;
+                                        console.log("新建表text和content")
+                                        var GameScore = Bmob.Object.extend("content");
+                                        var gameScore = new GameScore();
+                                        gameScore.save(null, {
+                                            success: function (object) {
+                                                con1id = object.id;
+                                                console.log(object.id);
+                                                //  创建text表
+                                                var GameScore = Bmob.Object.extend("Text");
+                                                var gameScore = new GameScore();
+                                                gameScore.set("t1url", con1id);
+                                                gameScore.save(null, {
+                                                    success: function (object) {
+                                                        console.log(object.id);
+                                                        textid = object.id;
+                                                    },
+                                                    error: function (model, error) {
+                                                        alert("创建失败");
+                                                    }
+                                                });
+                                            },
+                                            error: function (model, error) {
+                                                alert("创建失败");
+                                            }
+                                        });
+                                        //保存文本
+                                        K('.upt1s').click(function (e) {
+                                            var html = editor.html();
+                                            console.log(html)
+                                            var GameScore = Bmob.Object.extend("content");
+                                            var query = new Bmob.Query(GameScore);
+                                            query.get(con1id, {
+                                                success: function (gameScore) {
+                                                    gameScore.set('html', html);
+                                                    gameScore.save();
+                                                },
+                                                error: function (object, error) {
+                                                }
+                                            });
+
+                                        })
+//                                            显示视频 上传
+                                            K('.okindex0').click(function (e) {
+                                                var fileUploadControl = $("#profilePhotoFileUpload0")[0];
+                                                if (fileUploadControl.files.length > 0) {
+                                                    var file = fileUploadControl.files[0];
+                                                    console.log(file)
+                                                    var name = file.name;
+                                                    var file = new Bmob.File(name, file);
+                                                    file.save().then(function (obj) {
+                                                        var imgurl = obj.url();
+                                                        console.log(obj.url())
+                                                        var html = editor.html();
+                                                        editor.html(html + "<video src=" + imgurl + "></video>")
+                                                    }, function (error) {
+                                                        // the save failed.
+                                                    });
+                                                }
+                                            })
+
+//                                        显示图片 上传图片
+                                        K('.okindex1').click(function (e) {
+                                            var fileUploadControl = $("#profilePhotoFileUpload1")[0];
+                                            if (fileUploadControl.files.length > 0) {
+                                                var file = fileUploadControl.files[0];
+                                                console.log(file)
+                                                var name = file.name;
+                                                var file = new Bmob.File(name, file);
+                                                file.save().then(function (obj) {
+                                                    var imgurl = obj.url();
+                                                    console.log(obj.url())
+                                                  var html = editor.html();
+                                                    editor.html(html + "<img src=" + imgurl + "></img>")
+                                                }, function (error) {
+                                                    // the save failed.
+                                                });
+                                            }
+                                        })
+//                                       t1 封面
+//                                        点击确定后
+                                        K('.fm1').click(function (e) {
+                                            var t1name = $(".t1").val();
+                                            $(".sp1").html(t1name);
+                                            var fileUploadControl = $("#img1")[0];
+                                            if (fileUploadControl.files.length > 0) {
+                                                var file = fileUploadControl.files[0];
+                                                console.log(file)
+                                                var name = file.name;
+                                                var file = new Bmob.File(name, file);
+                                                file.save().then(function (obj) {
+                                                    var imgurl = obj.url();
+                                                    console.log(obj.url())
+                                                    var GameScore = Bmob.Object.extend("Text");
+                                                    var query = new Bmob.Query(GameScore);
+                                                    query.get(textid, {
+                                                        success: function (gameScore) {
+                                                            gameScore.set('t1img', imgurl);
+                                                            gameScore.set('t1name', t1name);
+                                                            gameScore.save()
+                                                            $(".timgs1").attr("src", imgurl);
+                                                        },
+                                                        error: function (object, error) {
+                                                        }
+                                                    });
+
+                                                }, function (error) {
+                                                    // the save failed.
+                                                });
+                                            }
+                                        })
+//                                        创建完主要的才能创建次要的、
+//                                        创建次级内容 1
+                                            var c=true;
+                                            if(c){
+                                                c=false;
+                                                K('.content-l-img2').click(function (e) {
+                                                    $('.box-m2').css("display","block")
+                                                    $('.box-m1').css("display","none")
+                                                    $('.box-m3').css("display","none")
+
+                                                    $('.add2').css("display","block")
+                                                    $('.add1').css("display","none")
+                                                    $('.add3').css("display","none")
+
+                                                    $('.upt2s').css("display","block")
+                                                    $('.upt1s').css("display","none")
+                                                    $('.upt3s').css("display","none")
+
+                                                    editor.html(" ");
+                                                    //  创建动态表
+                                                    var GameScore = Bmob.Object.extend("content");
+                                                    var gameScore = new GameScore();
+                                                    gameScore.save(null, {
+                                                        success: function (object) {
+                                                            con2id = object.id;
+                                                            // 添加ID进text表
+                                                            var GameScore = Bmob.Object.extend("Text");
+                                                            var query = new Bmob.Query(GameScore);
+                                                            query.get(textid, {
+                                                                success: function (gameScore) {
+                                                                    gameScore.set('t2url', con2id);
+                                                                    gameScore.save();
+                                                                },
+                                                                error: function (object, error) {
+                                                                }
+                                                            });
+                                                        },
+                                                        error: function (model, error) {
+                                                            alert("创建失败");
+                                                        }
+                                                    });
+//                                          次级的  文本+图片
+                                                    K('.okindex2').click(function (e) {
+                                                        var fileUploadControl = $("#profilePhotoFileUpload2")[0];
+                                                        if (fileUploadControl.files.length > 0) {
+                                                            var file = fileUploadControl.files[0];
+                                                            console.log(file)
+                                                            var name = file.name;
+                                                            var file = new Bmob.File(name, file);
+                                                            file.save().then(function (obj) {
+                                                                var imgurl = obj.url();
+                                                                console.log(obj.url())
+                                                               var html = editor.html();
+                                                                editor.html(html + "<img src=" + imgurl + "></img>")
+                                                            }, function (error) {
+                                                                // the save failed.
+                                                            });
+                                                        }
+                                                    })
+                                                    //保存文本
+                                                    K('.upt2s').click(function (e) {
+                                                        console.log("保存文本二")
+                                                        var html = editor.html();
+                                                        var GameScore = Bmob.Object.extend("content");
+                                                        var query = new Bmob.Query(GameScore);
+                                                        console.log(con2id);
+                                                        query.get(con2id, {
+                                                            success: function (gameScore) {
+                                                                gameScore.set('html', html);
+                                                                gameScore.save();
+                                                            },
+                                                            error: function (object, error) {
+                                                            }
+                                                        });
+
+                                                    })
+//                                            t1 封面
+//                                        点击确定后
+                                                    K('.fm2').click(function (e) {
+                                                        var t1name = $(".t2").val();
+                                                        $(".sp2").html(t1name);
+                                                        var fileUploadControl = $("#img2")[0];
+                                                        if (fileUploadControl.files.length > 0) {
+                                                            var file = fileUploadControl.files[0];
+                                                            console.log(file)
+                                                            var name = file.name;
+                                                            var file = new Bmob.File(name, file);
+                                                            file.save().then(function (obj) {
+                                                                var imgurl = obj.url();
+                                                                console.log(obj.url())
+                                                                var GameScore = Bmob.Object.extend("Text");
+                                                                var query = new Bmob.Query(GameScore);
+                                                                query.get(textid, {
+                                                                    success: function (gameScore) {
+                                                                        gameScore.set('t2img', imgurl);
+                                                                        gameScore.set('t2name', t1name);
+                                                                        gameScore.save()
+                                                                        $(".timgs2").attr("src", imgurl);
+                                                                    },
+                                                                    error: function (object, error) {
+                                                                    }
+                                                                });
+
+                                                            }, function (error) {
+                                                                // the save failed.
+                                                            });
+                                                        }
+                                                    })
+                                                });
+                                            }
+
+//                                        创建次级内容 2
+                                            var c=true;
+                                            if(c){
+                                                c=false
+                                                K('.content-l-img3').click(function (e) {
+                                                    $('.box-m3').css("display","block")
+                                                    $('.box-m2').css("display","none")
+                                                    $('.box-m1').css("display","none")
+
+                                                    $('.add3').css("display","block")
+                                                    $('.add2').css("display","none")
+                                                    $('.add1').css("display","none")
+
+                                                    $('.upt3s').css("display","block")
+                                                    $('.upt2s').css("display","none")
+                                                    $('.upt1s').css("display","none")
+                                                    editor.html("")
+                                                    //  创建content表
+                                                    var GameScore = Bmob.Object.extend("content");
+                                                    var gameScore = new GameScore();
+                                                    gameScore.save(null, {
+                                                        success: function (object) {
+                                                            con3id = object.id;
+                                                            console.log(object.id);
+                                                            // 添加进text表
+                                                            var GameScore = Bmob.Object.extend("Text");
+                                                            var query = new Bmob.Query(GameScore);
+                                                            query.get(textid, {
+                                                                success: function (gameScore) {
+                                                                    gameScore.set('t3url', con3id);
+                                                                    gameScore.save();
+                                                                },
+                                                                error: function (object, error) {
+                                                                }
+                                                            });
+                                                        },
+                                                        error: function (model, error) {
+                                                            alert("创建失败");
+                                                        }
+                                                    });
+//                                            次级的  文本+图片2
+                                                    K('.okindex3').click(function (e) {
+                                                        var fileUploadControl = $("#profilePhotoFileUpload3")[0];
+                                                        if (fileUploadControl.files.length > 0) {
+                                                            var file = fileUploadControl.files[0];
+                                                            console.log(file)
+                                                            var name = file.name;
+                                                            var file = new Bmob.File(name, file);
+                                                            file.save().then(function (obj) {
+                                                                var imgurl = obj.url();
+                                                                console.log(obj.url())
+                                                              var  html = editor.html();
+                                                                editor.html(html + "<img src=" + imgurl + "></img>")
+                                                            }, function (error) {
+                                                                // the save failed.
+                                                            });
+                                                        }
+                                                    })
+                                                    //保存文本
+                                                    K('.upt3s').click(function (e) {
+                                                        var html = editor.html();
+                                                        var GameScore = Bmob.Object.extend("content");
+                                                        var query = new Bmob.Query(GameScore);
+                                                        query.get(con3id, {
+                                                            success: function (gameScore) {
+                                                                gameScore.set('html', html);
+                                                                gameScore.save();
+                                                            },
+                                                            error: function (object, error) {
+                                                            }
+                                                        });
+
+                                                    })
+//                                            t1 封面
+//                                        点击确定后
+                                                    K('.fm3').click(function (e) {
+                                                        var t1name = $(".t3").val();
+                                                        $(".sp3").html(t1name);
+                                                        var fileUploadControl = $("#img3")[0];
+                                                        if (fileUploadControl.files.length > 0) {
+                                                            var file = fileUploadControl.files[0];
+                                                            var name = file.name;
+                                                            var file = new Bmob.File(name, file);
+                                                            file.save().then(function (obj) {
+                                                                var imgurl = obj.url();
+                                                                console.log(obj.url())
+                                                                var GameScore = Bmob.Object.extend("Text");
+                                                                var query = new Bmob.Query(GameScore);
+                                                                query.get(textid, {
+                                                                    success: function (gameScore) {
+                                                                        gameScore.set('t3img', imgurl);
+                                                                        gameScore.set('t3name', t1name);
+                                                                        gameScore.save()
+                                                                        $(".timgs3").attr("src", imgurl);
+                                                                    },
+                                                                    error: function (object, error) {
+                                                                    }
+                                                                });
+
+                                                            }, function (error) {
+                                                                // the save failed.
+                                                            });
+                                                        }
+                                                    })
+                                                });
+                                            }
+                                    }
+                                    });
+                                })
+                            });
+                        </script>
+                    </form>
+                    <div class="box-m1" style="width: 95%;height: 380px;background-color: powderblue;margin-top:212px;padding-left: 5%">
+                        <h2 style="text-align: center ">发布封面编辑</h2>
+                        <h2>标题</h2>
+                        <input type="text" class="t1"/>
+                        <h2>封面</h2>
+                        <input type="file" id="img1">
+                        <br/>
+                        <button style="width: 100px;height: 30px" class="fm1">确定1</button>
+                    </div>
+
+                    <div class="box-m2" style="width: 95%;height: 380px;background-color:powderblue;margin-top:212px;padding-left: 5%">
+                        <h2 style="text-align: center ">发布封面编辑</h2>
+                        <h2>标题</h2>
+                        <input type="text" class="t2"/>
+                        <h2>封面</h2>
+                        <input type="file" id="img2">
+                        <br/>
+                        <button style="width: 100px;height: 30px" class="fm2">确定2</button>
+                    </div>
+
+
+                    <div class="box-m3" style="width: 95%;height: 380px;background-color: powderblue;margin-top:212px;padding-left: 5%">
+                        <h2 style="text-align: center ">发布封面编辑</h2>
+                        <h2>标题</h2>
+                        <input type="text" class="t3"/>
+                        <h2>封面</h2>
+                        <input type="file" id="img3">
+                        <br/>
+                       <button style="width: 100px;height: 30px" class="fm3">确定3</button>
+                    </div>
+
+
+                </div>
+                <!--右-->
+                <div class="content-r">
+                    <h2 class="content-0-txt" >添加素材</h2>
+
+                    <div class="add1">
+                        <h2>添加视频</h2>
+                        <input type="file" id="profilePhotoFileUpload0">
+                        <button style="width: 100px;height: 30px" class="okindex0">确定(视频)</button>
+                        <h2  >添加图片1</h2>
+                        <input type="file" id="profilePhotoFileUpload1">
+                        <button style="width: 100px;height: 30px" class="okindex1">确定1</button>
+                    </div>
+                    <div class="add2">
+                        <h2>添加图片2</h2>
+                        <input type="file" id="profilePhotoFileUpload2">
+                        <button style="width: 100px;height: 30px" class="okindex2">确定2</button>
+                    </div>
+
+                     <div class="add3">
+                        <h2>添加图片3</h2>
+                        <input type="file" id="profilePhotoFileUpload3">
+                        <button style="width: 100px;height: 30px" class="okindex3">确定3</button>
+                    </div>
+
+                    <br/>
+                    <br/>
+                    <button class="upt1s">上传当前图文1</button>
+                    <br/>
+                    <button class="upt2s">上传当前图文2</button>
+                    <br/>
+                    <button class="upt3s">上传当前图文3</button>
+                </div>
+            </div>
+        </div>
+        <!--下-->
+        <div class="bottom">
+            <!--<div>-->
+                <!--<a href="javascript:" class="uptext">创建素材</a>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<a href="javascript:" class="uptext">发布</a>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<a href="javascript:" class="rmimg">放弃</a>-->
+            <!--</div>-->
+        </div>
+    </div>
+</body>
+</html>
+<script src="./index.js"></script>

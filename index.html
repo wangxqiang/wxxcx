@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="jquery.min.js"></script>
+    <style>
+        @charset "UTF-8";
+        /**
+         *
+         * @authors Your Name (you@example.org)
+         * @date    2015-11-12 09:29:44
+         * @version $Id$
+         */
+        html,body{
+            width: 100%;
+            margin: 0 auto;
+            padding:0;
+        }
+        body{
+            font-size: 14px;
+            font-family: "微软雅黑";
+            color: #333;
+        }
+        a{
+            text-decoration: none;
+        }
+        img{
+            border: none;
+        }
+        ul,li{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        h1,h2,h3,h4,h5,h6,p{
+            margin-bottom: 0;
+            margin-top: 0;
+            font-weight: normal;
+        }
+        input[type="button"],button{
+            border: none;
+        }
+        body{
+            background-color: pink;
+        }
+        .box{
+            width: 400px;
+            height: 250px;
+            background-color: #fff;
+            margin:200px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+       账号 <input type="text" class="zh"/>
+        <br/>
+       密码 <input type="text" class="mm"/>
+        <br/>
+        <button class="but">登录</button>
+    </div>
+</body>
+<script>
+    $(".but").on("click",function(){var zh= $(".zh").val();var mm=  $(".mm").val();if(zh=mm){self.location='test/total.html';}});
+</script>
+</html>
